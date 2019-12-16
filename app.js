@@ -1,29 +1,29 @@
 
-// create our angular app and inject ngAnimate and ui-router 
+// create our angular app and inject ngAnimate and ui-router
 // =============================================================================
 angular.module('formApp', ['ngAnimate', 'ui.router'])
 
-// configuring our routes 
+// configuring our routes
 // =============================================================================
 .config(function($stateProvider, $urlRouterProvider) {
-    
+
     $stateProvider
-    
+
         // route to show our basic form (/form)
         .state('form', {
             url: '/form',
             templateUrl: 'form.html',
             controller: 'formController'
         })
-        
-        // nested states 
+
+        // nested states
         // each of these sections will have their own view
         // url will be nested (/form/profile)
         .state('form.profile', {
             url: '/profile',
             templateUrl: 'form-profile.html'
         })
-        
+
         // url will be /form/interests
 
         .state('form.profile2', {
@@ -46,26 +46,38 @@ angular.module('formApp', ['ngAnimate', 'ui.router'])
         .state('form.social', {
             url: '/social',
             templateUrl: 'form-social.html'
+        })
+
+        .state('form.review', {
+            url: '/review',
+            templateUrl: 'form-review.html'
         });
-       
+
     // catch all route
-    // send users to the form page 
+    // send users to the form page
     $urlRouterProvider.otherwise('/form/profile');
 })
 
 // our controller for the form
 // =============================================================================
 .controller('formController', function($scope) {
-    
+
     // we will store all of our form data in this object
     $scope.formData = {};
-    
+
+
     // function to process the form
     $scope.processForm = function() {
-        alert('awesome!');  
-    };
-    
+      console.log($scope.formData);
+      fetch('http://192.168.1.158:1234/profile/submit', {
+        headers:{
+          'Content-Type' : 'application/json'
+        },
+    method: 'post',
+    body: JSON.stringify($scope.formData)
+  }).then(function(response) {
+    alert("Form Submitted Succesfully");
+  })
+  };
+
 });
-
-
-
